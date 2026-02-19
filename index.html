@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Casa Carigar – Match the Craft</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Urbanist:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --terracotta: #8D391E;
+  --alabaster: #F0EDE0;
+  --gunmetal: #002A32;
+  --greylock: #dddddd;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Urbanist', sans-serif;
+  background: var(--alabaster);
+  color: var(--gunmetal);
+}
+
+.container {
+  padding: 16px;
+}
+
+h1, h2 {
+  font-family: 'Spectral', serif;
+  text-align: center;
+}
+
+.hidden { display: none; }
+
+/* Header */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.menu-btn {
+  background: none;
+  border: 1px solid var(--gunmetal);
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* Game Layout */
+.game-grid {
+  display: flex;
+  gap: 10px;
+}
+
+.column {
+  width: 50%;
+}
+
+.card {
+  padding: 10px;
+  border: 1px solid var(--gunmetal);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.selected {
+  background: var(--terracotta);
+  color: white;
+}
+
+.locked {
+  background: var(--greylock);
+  color: #555;
+  cursor: not-allowed;
+}
+
+.scoreboard {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+button {
+  padding: 10px 16px;
+  border: none;
+  background: var(--terracotta);
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+.center {
+  text-align: center;
+  margin-top: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid var(--gunmetal);
+  border-radius: 4px;
+}
+
+/* Leaderboard */
+.leaderboard-entry {
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.back-btn {
+  margin-bottom: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- ENTRY -->
+  <div id="entry">
+    <h1>Match the Craft to Its Region</h1>
+    <input type="text" id="name" placeholder="Your Name" />
+    <div class="center">
+      <button onclick="startGame()">Start Game</button>
+      <button onclick="showLeaderboard()">Leaderboard</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game" class="hidden">
+    <div class="topbar">
+      <div class="scoreboard">
+        Matches: <span id="matchCount">0</span> / 10
+      </div>
+      <button class="menu-btn" onclick="goHome()">Home</button>
+    </div>
+
+    <div class="game-grid">
+      <div class="column">
+        <h3>Crafts</h3>
+        <div id="crafts"></div>
+      </div>
+      <div class="column">
+        <h3>Regions</h3>
+        <div id="regions"></div>
+      </div>
+    </div>
+
+    <div class="center">
+      <button id="submitBtn" disabled onclick="submitGame()">Submit</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result" class="hidden">
+    <h2 id="finalScore"></h2>
+    <div class="center">
+      <button onclick="goHome()">Home</button>
+      <button onclick="showLeaderboard()">Leaderboard</button>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div id="leaderboard" class="hidden">
+    <button class="menu-btn back-btn" onclick="goHome()">← Back</button>
+    <h2>Leaderboard</h2>
+    <div id="leaderboardList"></div>
+  </div>
+
+</div>
+
+<script>
+const crafts = [
+"Brass work","Wood carving","Blue pottery","Block printing",
+"Lacquered toys","Handmade tiles","Bidriware",
+"Dhokra metalwork","Shisha embroidery","Bone inlay"
+];
+
+const regions = [
+"Moradabad","Saharanpur","Jaipur","Sanganer",
+"Channapatna","Athangudi","Bidar",
+"Bastar","Kutch","Udaipur"
+];
+
+const correctMatches = {
+"Brass work":"Moradabad",
+"Wood carving":"Saharanpur",
+"Blue pottery":"Jaipur",
+"Block printing":"Sanganer",
+"Lacquered toys":"Channapatna",
+"Handmade tiles":"Athangudi",
+"Bidriware":"Bidar",
+"Dhokra metalwork":"Bastar",
+"Shisha embroidery":"Kutch",
+"Bone inlay":"Udaipur"
+};
+
+let selectedCraft = null;
+let matches = {};
+let usedRegions = new Set();
+let currentPlayer = "";
+
+/* Shuffle */
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+}
+
+/* Navigation */
+function goHome(){
+  hideAll();
+  document.getElementById("entry").classList.remove("hidden");
+}
+
+function showLeaderboard(){
+  hideAll();
+  document.getElementById("leaderboard").classList.remove("hidden");
+  renderLeaderboard();
+}
+
+function hideAll(){
+  document.getElementById("entry").classList.add("hidden");
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("leaderboard").classList.add("hidden");
+}
+
+/* Start */
+function startGame(){
+  const name=document.getElementById("name").value.trim();
+  if(!name){alert("Enter name");return;}
+  currentPlayer=name;
+  matches={};
+  usedRegions=new Set();
+  selectedCraft=null;
+  shuffle(regions);
+  hideAll();
+  document.getElementById("game").classList.remove("hidden");
+  renderLists();
+}
+
+/* Render */
+function renderLists(){
+  const craftContainer=document.getElementById("crafts");
+  const regionContainer=document.getElementById("regions");
+  craftContainer.innerHTML="";
+  regionContainer.innerHTML="";
+
+  crafts.forEach(craft=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerText=craft;
+    div.onclick=()=>selectCraft(craft,div);
+    craftContainer.appendChild(div);
+  });
+
+  regions.forEach(region=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerText=region;
+    div.onclick=()=>selectRegion(region,div);
+    regionContainer.appendChild(div);
+  });
+}
+
+function selectCraft(craft,element){
+  if(matches[craft])return;
+  document.querySelectorAll("#crafts .card").forEach(c=>c.classList.remove("selected"));
+  element.classList.add("selected");
+  selectedCraft=craft;
+}
+
+function selectRegion(region,element){
+  if(!selectedCraft||usedRegions.has(region))return;
+  matches[selectedCraft]=region;
+  usedRegions.add(region);
+  element.classList.add("locked");
+  element.onclick=null;
+  selectedCraft=null;
+  updateUI();
+}
+
+function updateUI(){
+  document.querySelectorAll("#crafts .card").forEach(card=>{
+    const craft=card.innerText;
+    if(matches[craft]){
+      card.innerHTML=craft+" — "+matches[craft];
+      card.classList.add("locked");
+      card.onclick=null;
+    }
+  });
+  document.getElementById("matchCount").innerText=Object.keys(matches).length;
+  document.getElementById("submitBtn").disabled=Object.keys(matches).length!==10;
+}
+
+/* Submit */
+function submitGame(){
+  let score=0;
+  for(let craft in correctMatches){
+    if(matches[craft]===correctMatches[craft])score++;
+  }
+
+  saveScore(currentPlayer,score);
+
+  hideAll();
+  document.getElementById("result").classList.remove("hidden");
+  document.getElementById("finalScore").innerText=currentPlayer+" scored "+score+"/10";
+}
+
+/* Leaderboard persistence */
+function saveScore(name,score){
+  let data=JSON.parse(localStorage.getItem("leaderboard"))||[];
+  data.push({name,score});
+  data.sort((a,b)=>b.score-a.score);
+  localStorage.setItem("leaderboard",JSON.stringify(data));
+}
+
+function renderLeaderboard(){
+  let data=JSON.parse(localStorage.getItem("leaderboard"))||[];
+  const list=document.getElementById("leaderboardList");
+  list.innerHTML="";
+  data.forEach((entry,index)=>{
+    const div=document.createElement("div");
+    div.className="leaderboard-entry";
+    div.innerText=(index+1)+". "+entry.name+" — "+entry.score+"/10";
+    list.appendChild(div);
+  });
+}
+</script>
+
+</body>
+</html>
