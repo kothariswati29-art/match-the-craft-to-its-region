@@ -7,18 +7,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Urbanist:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-1: #f8f4eb;
+  --bg-1: #f8f4ea;
   --bg-2: #efe7d8;
-  --panel: #fbf8f1;
-  --text: #13343b;
-  --text-soft: #567277;
+  --panel: #fcf9f2;
+  --ink: #14373f;
+  --ink-soft: #5a757a;
   --accent: #8d391e;
-  --accent-2: #a9573f;
-  --good-bg: #e7f3ea;
-  --good-text: #1e6a36;
-  --bad-bg: #fbe8e8;
-  --bad-text: #8f2f2f;
-  --shadow: 0 14px 36px rgba(19, 52, 59, 0.1);
+  --accent-strong: #7a2f19;
+  --soft-fill: rgba(20, 55, 63, 0.08);
+  --good-bg: #e9f6ed;
+  --good-border: #5ca777;
+  --bad-bg: #fbecec;
+  --bad-border: #d16a6a;
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --shadow: 0 16px 36px rgba(20, 55, 63, 0.1);
 }
 
 * {
@@ -33,48 +36,50 @@ body {
 
 body {
   font-family: "Urbanist", sans-serif;
-  color: var(--text);
+  color: var(--ink);
   background: linear-gradient(165deg, var(--bg-1) 0%, var(--bg-2) 100%);
 }
 
-.app {
+.app-shell {
   min-height: 100vh;
   width: 100%;
   padding: 16px;
-  display: grid;
-  place-items: center;
 }
 
-.screen {
-  width: min(100%, 980px);
-  background: var(--panel);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 22px;
-}
-
-.hidden {
+.view {
+  width: min(100%, 1040px);
+  margin: 0 auto;
   display: none;
 }
 
-.center-screen {
+.view.is-active {
+  display: block;
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.home-layout {
   min-height: calc(100vh - 32px);
   display: grid;
   place-items: center;
 }
 
 .home-card {
-  width: min(100%, 560px);
-  margin: 0 auto;
+  width: min(100%, 760px);
 }
 
 .logo {
   display: block;
-  margin: 0 auto 16px;
+  margin: 0 auto 24px;
   width: auto;
-  max-width: min(100%, 360px);
-  max-height: 150px;
   height: auto;
+  max-height: 200px;
+  max-width: min(100%, 520px);
   object-fit: contain;
 }
 
@@ -83,52 +88,53 @@ h2,
 h3 {
   margin: 0;
   font-family: "Spectral", serif;
+  font-weight: 600;
 }
 
 .title {
   text-align: center;
-  font-size: clamp(28px, 4vw, 36px);
-  line-height: 1.15;
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.1;
 }
 
 .subtitle {
-  margin: 10px 0 0;
+  margin: 12px 0 0;
   text-align: center;
-  color: var(--text-soft);
-  font-size: 15px;
+  color: var(--ink-soft);
+  font-size: 16px;
 }
 
 .input {
   width: 100%;
   margin-top: 24px;
   border: 0;
-  border-radius: 12px;
-  padding: 13px 14px;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
   font-size: 15px;
-  color: var(--text);
-  background: #ffffff;
-  box-shadow: inset 0 0 0 1px rgba(19, 52, 59, 0.12);
+  background: #fff;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px rgba(20, 55, 63, 0.14);
 }
 
 .input:focus {
   outline: none;
-  box-shadow: inset 0 0 0 2px rgba(19, 52, 59, 0.28);
+  box-shadow: inset 0 0 0 2px rgba(20, 55, 63, 0.28);
 }
 
-.actions {
-  margin-top: 16px;
+.row {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .btn {
   border: 0;
-  border-radius: 11px;
-  padding: 11px 16px;
+  border-radius: 12px;
+  padding: 12px 16px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  transition: transform 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
 }
 
 .btn:hover:not(:disabled) {
@@ -146,121 +152,107 @@ h3 {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #7f3119;
+  background: var(--accent-strong);
 }
 
 .btn-secondary {
-  background: rgba(19, 52, 59, 0.1);
-  color: var(--text);
+  background: var(--soft-fill);
+  color: var(--ink);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(19, 52, 59, 0.16);
+  background: rgba(20, 55, 63, 0.14);
 }
 
 .btn-home {
-  background: #1f4046;
-  color: #f7f0e2;
+  background: #1e4147;
+  color: #f7f1e4;
 }
 
 .btn-home:hover:not(:disabled) {
-  background: #163238;
+  background: #16353a;
 }
 
-.game-logo,
-.leaderboard-logo {
-  margin-bottom: 16px;
-}
-
-.game-top {
+.game-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.score {
-  color: var(--text-soft);
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.board {
-  position: relative;
-  width: min(100%, 900px);
-  margin: 0 auto;
-  border-radius: 14px;
-  background: #fffdf8;
-  box-shadow: inset 0 0 0 1px rgba(19, 52, 59, 0.08);
-  padding: 12px;
-  overflow: hidden;
-}
-
-.pair-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 8px;
+  margin-bottom: 16px;
+}
+
+.score-text {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.game-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 140px minmax(260px, 1fr);
+  gap: 16px;
   align-items: start;
+  width: min(100%, 980px);
+  margin: 0 auto;
 }
 
-.col {
-  min-width: 0;
+.col-title {
+  font-size: 18px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
 }
 
-.col h3 {
-  font-size: 16px;
-  color: var(--text-soft);
-  margin-bottom: 8px;
-}
-
-.list {
+.card-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
-.card {
+.match-card {
   width: 100%;
-  min-height: 44px;
-  padding: 11px 10px;
-  text-align: left;
+  min-height: 50px;
   border: 0;
-  border-radius: 10px;
-  background: #ffffff;
-  color: var(--text);
-  box-shadow: inset 0 0 0 1px rgba(19, 52, 59, 0.1);
-  cursor: pointer;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+  padding: 13px 14px;
   font-size: 14px;
   line-height: 1.25;
-  transition: background-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
+  box-shadow: inset 0 0 0 1px rgba(20, 55, 63, 0.1);
+  cursor: pointer;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
 }
 
-.card:hover:not(.is-locked) {
-  box-shadow: inset 0 0 0 1px rgba(19, 52, 59, 0.3), 0 4px 14px rgba(19, 52, 59, 0.08);
+.match-card:hover:not(.is-locked) {
+  box-shadow: inset 0 0 0 1px rgba(20, 55, 63, 0.26), 0 6px 16px rgba(20, 55, 63, 0.08);
 }
 
-.card.is-selected {
+.match-card.is-selected {
   background: #fff2ec;
-  box-shadow: inset 0 0 0 2px rgba(169, 87, 63, 0.45);
+  box-shadow: inset 0 0 0 2px rgba(141, 57, 30, 0.35);
 }
 
-.card.is-locked {
+.match-card.is-locked {
   cursor: default;
-  background: #f2ece0;
+  background: #f4eee2;
 }
 
-.line-layer {
+.spacer {
+  position: relative;
+  min-height: 100%;
+}
+
+.line-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  overflow: hidden;
 }
 
-.game-actions {
-  margin-top: 14px;
+.actions {
+  margin-top: 24px;
   display: flex;
   justify-content: center;
 }
@@ -269,8 +261,8 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .leaderboard-list {
@@ -279,166 +271,207 @@ h3 {
   gap: 8px;
 }
 
-.leaderboard-item {
+.leader-row {
   display: grid;
   grid-template-columns: 1fr auto auto;
   gap: 8px;
   align-items: center;
-  background: #fffdf8;
-  border-radius: 10px;
-  padding: 10px 12px;
-  box-shadow: inset 0 0 0 1px rgba(19, 52, 59, 0.08);
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: inset 0 0 0 1px rgba(20, 55, 63, 0.1);
 }
 
 .muted {
-  color: var(--text-soft);
+  color: var(--ink-soft);
 }
 
-.result-head {
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 45, 51, 0.44);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.overlay.is-open {
+  display: flex;
+}
+
+.results-panel {
+  width: min(100%, 1040px);
+  max-height: min(100vh - 32px, 920px);
+  overflow: auto;
+}
+
+.results-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
 .result-summary {
-  margin: 0 0 14px;
-  color: var(--text-soft);
+  margin: 0 0 16px;
+  color: var(--ink-soft);
   font-weight: 600;
 }
 
-.result-board .card {
-  cursor: default;
+.results-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 140px minmax(260px, 1fr);
+  gap: 16px;
+  align-items: start;
 }
 
-.card.good {
+.result-card {
+  width: 100%;
+  min-height: 50px;
+  border-radius: 14px;
+  background: #fff;
+  padding: 13px 14px;
+  font-size: 14px;
+  line-height: 1.25;
+  box-shadow: inset 0 0 0 1px rgba(20, 55, 63, 0.1);
+}
+
+.result-card.good {
   background: var(--good-bg);
-  color: var(--good-text);
-  box-shadow: inset 0 0 0 1px rgba(30, 106, 54, 0.25);
+  box-shadow: inset 0 0 0 1px var(--good-border);
 }
 
-.card.bad {
+.result-card.bad {
   background: var(--bad-bg);
-  color: var(--bad-text);
-  box-shadow: inset 0 0 0 1px rgba(143, 47, 47, 0.25);
+  box-shadow: inset 0 0 0 1px var(--bad-border);
 }
 
-.result-match-list {
-  margin-top: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.result-match-item {
-  font-size: 13px;
-  color: var(--text-soft);
-}
-
-@media (max-width: 760px) {
-  .app {
+@media (max-width: 860px) {
+  .app-shell {
     padding: 10px;
   }
 
-  .screen {
-    padding: 14px;
-    border-radius: 14px;
+  .panel {
+    padding: 16px;
+    border-radius: 16px;
   }
 
   .logo {
-    max-height: 90px;
-    max-width: min(100%, 280px);
+    max-height: 148px;
+    margin-bottom: 18px;
   }
 
-  .actions {
+  .row {
     flex-direction: column;
   }
 
-  .actions .btn {
+  .row .btn {
     width: 100%;
   }
 
-  .game-top {
-    margin-bottom: 10px;
-  }
-
-  .pair-grid {
-    gap: 6px;
-  }
-
-  .card {
-    min-height: 42px;
-    font-size: 13px;
-    padding: 10px 8px;
-  }
-
-  .leaderboard-item {
+  .game-layout {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .spacer {
+    display: none;
+  }
+
+  .card-list {
+    gap: 12px;
+  }
+
+  .leader-row {
+    grid-template-columns: 1fr;
+  }
+
+  .results-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 </style>
 </head>
 <body>
-  <div class="app">
-    <section id="homeScreen" class="screen center-screen">
-      <div class="home-card">
-        <img class="logo" src="./logo.png" alt="Casa Carigar logo" loading="eager" decoding="sync">
-        <h1 class="title">Match the Craft to Its Region</h1>
-        <p class="subtitle">Discover the geography behind India's handcrafted traditions.</p>
-        <input id="playerName" class="input" type="text" maxlength="40" placeholder="Your Name">
+  <div class="app-shell">
+    <section id="home-view" class="view is-active">
+      <div class="home-layout">
+        <div class="panel home-card">
+          <img class="logo" src="./logo.png" alt="Casa Carigar logo" loading="eager" decoding="sync" />
+          <h1 class="title">Match the Craft to Its Region</h1>
+          <p class="subtitle">Explore India's handcrafted heritage through a refined matching challenge.</p>
+          <input id="player-name" class="input" type="text" maxlength="40" placeholder="Your Name" />
+          <div class="row">
+            <button id="start-btn" class="btn btn-primary" type="button">Start Game</button>
+            <button id="leaderboard-btn" class="btn btn-secondary" type="button">Leaderboard</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="game-view" class="view">
+      <div class="panel">
+        <div class="game-head">
+          <div id="score-text" class="score-text">Matches: 0 / 10</div>
+          <button id="home-from-game-btn" class="btn btn-home" type="button">Home</button>
+        </div>
+
+        <div class="game-layout">
+          <div>
+            <h3 class="col-title">Crafts</h3>
+            <div id="craft-list" class="card-list"></div>
+          </div>
+
+          <div id="line-spacer" class="spacer">
+            <svg id="line-svg" class="line-svg" aria-hidden="true"></svg>
+          </div>
+
+          <div>
+            <h3 class="col-title">Regions</h3>
+            <div id="region-list" class="card-list"></div>
+          </div>
+        </div>
+
         <div class="actions">
-          <button id="startBtn" class="btn btn-primary" type="button">Start Game</button>
-          <button id="openLeaderboardBtn" class="btn btn-secondary" type="button">Leaderboard</button>
+          <button id="submit-btn" class="btn btn-primary" type="button" disabled>Submit</button>
         </div>
       </div>
     </section>
 
-    <section id="gameScreen" class="screen hidden">
-      <img class="logo game-logo" src="./logo.png" alt="Casa Carigar logo" loading="eager" decoding="sync">
-      <div class="game-top">
-        <div id="scoreText" class="score">Matches: 0 / 10</div>
-        <button id="homeFromGameBtn" class="btn btn-home" type="button">Home</button>
+    <section id="leaderboard-view" class="view">
+      <div class="panel">
+        <div class="leaderboard-head">
+          <h2>Leaderboard</h2>
+          <button id="home-from-leaderboard-btn" class="btn btn-home" type="button">Home</button>
+        </div>
+        <div id="leaderboard-list" class="leaderboard-list"></div>
       </div>
-      <div id="gameBoard" class="board">
-        <svg id="lineLayer" class="line-layer" aria-hidden="true"></svg>
-        <div class="pair-grid">
-          <div class="col">
-            <h3>Crafts</h3>
-            <div id="craftList" class="list"></div>
-          </div>
-          <div class="col">
-            <h3>Regions</h3>
-            <div id="regionList" class="list"></div>
-          </div>
+    </section>
+  </div>
+
+  <div id="results-overlay" class="overlay" aria-hidden="true">
+    <div class="panel results-panel">
+      <div class="results-head">
+        <h2 id="results-title">Results</h2>
+        <button id="results-back-btn" class="btn btn-secondary" type="button">Back to Leaderboard</button>
+      </div>
+      <p id="results-summary" class="result-summary"></p>
+      <div class="results-layout">
+        <div>
+          <h3 class="col-title">Crafts</h3>
+          <div id="results-craft-list" class="card-list"></div>
+        </div>
+        <div></div>
+        <div>
+          <h3 class="col-title">Regions</h3>
+          <div id="results-region-list" class="card-list"></div>
         </div>
       </div>
-      <div class="game-actions">
-        <button id="submitBtn" class="btn btn-primary" type="button" disabled>Submit</button>
-      </div>
-    </section>
-
-    <section id="leaderboardScreen" class="screen hidden">
-      <img class="logo leaderboard-logo" src="./logo.png" alt="Casa Carigar logo" loading="eager" decoding="sync">
-      <div class="leaderboard-head">
-        <h2>Leaderboard</h2>
-        <button id="backHomeFromLeaderboardBtn" class="btn btn-home" type="button">Home</button>
-      </div>
-      <div id="leaderboardList" class="leaderboard-list"></div>
-    </section>
-
-    <section id="resultScreen" class="screen hidden">
-      <div class="result-head">
-        <h2 id="resultTitle">Results</h2>
-        <div class="actions" style="margin-top: 0;">
-          <button id="homeFromResultBtn" class="btn btn-home" type="button">Home</button>
-          <button id="backToLeaderboardBtn" class="btn btn-secondary hidden" type="button">Back to Leaderboard</button>
-        </div>
-      </div>
-      <p id="resultSummary" class="result-summary"></p>
-      <div id="resultBoard" class="board result-board"></div>
-      <div id="resultMatchList" class="result-match-list"></div>
-    </section>
+    </div>
   </div>
 
 <script>
@@ -467,56 +500,71 @@ const CORRECT_MATCHES = {
   "Bone inlay": "Udaipur"
 };
 
-const SCREENS = {
-  home: document.getElementById("homeScreen"),
-  game: document.getElementById("gameScreen"),
-  leaderboard: document.getElementById("leaderboardScreen"),
-  result: document.getElementById("resultScreen")
-};
-
 const dom = {
-  playerName: document.getElementById("playerName"),
-  scoreText: document.getElementById("scoreText"),
-  craftList: document.getElementById("craftList"),
-  regionList: document.getElementById("regionList"),
-  submitBtn: document.getElementById("submitBtn"),
-  gameBoard: document.getElementById("gameBoard"),
-  lineLayer: document.getElementById("lineLayer"),
-  leaderboardList: document.getElementById("leaderboardList"),
-  resultTitle: document.getElementById("resultTitle"),
-  resultSummary: document.getElementById("resultSummary"),
-  resultBoard: document.getElementById("resultBoard"),
-  resultMatchList: document.getElementById("resultMatchList"),
-  backToLeaderboardBtn: document.getElementById("backToLeaderboardBtn")
+  views: {
+    home: document.getElementById("home-view"),
+    game: document.getElementById("game-view"),
+    leaderboard: document.getElementById("leaderboard-view")
+  },
+  playerName: document.getElementById("player-name"),
+  scoreText: document.getElementById("score-text"),
+  craftList: document.getElementById("craft-list"),
+  regionList: document.getElementById("region-list"),
+  lineSvg: document.getElementById("line-svg"),
+  lineSpacer: document.getElementById("line-spacer"),
+  submitBtn: document.getElementById("submit-btn"),
+  leaderboardList: document.getElementById("leaderboard-list"),
+  resultsOverlay: document.getElementById("results-overlay"),
+  resultsTitle: document.getElementById("results-title"),
+  resultsSummary: document.getElementById("results-summary"),
+  resultsCraftList: document.getElementById("results-craft-list"),
+  resultsRegionList: document.getElementById("results-region-list")
 };
 
 const state = {
+  currentView: "home",
   currentPlayer: "",
   selectedCraft: null,
   matches: {},
   usedRegions: new Set(),
   shuffledRegions: [],
-  craftElements: new Map(),
-  regionElements: new Map(),
+  craftEls: new Map(),
+  regionEls: new Map(),
+  lastLeaderboardScrollY: 0,
   resizeRAF: null
 };
 
-function showScreen(name) {
-  Object.values(SCREENS).forEach((screen) => screen.classList.add("hidden"));
-  SCREENS[name].classList.remove("hidden");
+function isMobile() {
+  return window.matchMedia("(max-width: 860px)").matches;
 }
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+function switchView(viewName) {
+  Object.values(dom.views).forEach((view) => view.classList.remove("is-active"));
+  dom.views[viewName].classList.add("is-active");
+  state.currentView = viewName;
+
+  if (viewName !== "game") {
+    clearLines();
+    state.selectedCraft = null;
+    state.craftEls.forEach((el) => el.classList.remove("is-selected"));
   }
-  return array;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function goHome() {
-  clearLines();
-  showScreen("home");
+function shuffle(list) {
+  const a = [...list];
+  for (let i = a.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function calculateScore(matches) {
+  return CRAFTS.reduce((score, craft) => {
+    return score + (matches[craft] === CORRECT_MATCHES[craft] ? 1 : 0);
+  }, 0);
 }
 
 function startGame() {
@@ -530,51 +578,14 @@ function startGame() {
   state.selectedCraft = null;
   state.matches = {};
   state.usedRegions = new Set();
-  state.shuffledRegions = shuffle([...REGIONS]);
-  state.craftElements.clear();
-  state.regionElements.clear();
+  state.shuffledRegions = shuffle(REGIONS);
+  state.craftEls.clear();
+  state.regionEls.clear();
 
-  renderGameBoard();
+  renderGame();
   updateGameScore();
-  showScreen("game");
+  switchView("game");
   requestAnimationFrame(drawConnections);
-}
-
-function renderGameBoard() {
-  dom.craftList.innerHTML = "";
-  dom.regionList.innerHTML = "";
-  clearLines();
-
-  CRAFTS.forEach((craft) => {
-    const card = document.createElement("button");
-    card.className = "card";
-    card.type = "button";
-    card.textContent = craft;
-    card.addEventListener("click", () => selectCraft(craft));
-    dom.craftList.appendChild(card);
-    state.craftElements.set(craft, card);
-  });
-
-  state.shuffledRegions.forEach((region) => {
-    const card = document.createElement("button");
-    card.className = "card";
-    card.type = "button";
-    card.textContent = region;
-    card.addEventListener("click", () => selectRegion(region));
-    dom.regionList.appendChild(card);
-    state.regionElements.set(region, card);
-  });
-}
-
-function selectCraft(craft) {
-  if (state.matches[craft]) {
-    return;
-  }
-
-  state.selectedCraft = state.selectedCraft === craft ? null : craft;
-  state.craftElements.forEach((element, craftName) => {
-    element.classList.toggle("is-selected", state.selectedCraft === craftName);
-  });
 }
 
 function handleMatch(craft, region) {
@@ -582,37 +593,57 @@ function handleMatch(craft, region) {
   state.usedRegions.add(region);
   state.selectedCraft = null;
 
-  const craftElement = state.craftElements.get(craft);
-  const regionElement = state.regionElements.get(region);
-
-  if (craftElement) {
-    craftElement.classList.remove("is-selected");
-    craftElement.classList.add("is-locked");
+  const craftCard = state.craftEls.get(craft);
+  const regionCard = state.regionEls.get(region);
+  if (craftCard) {
+    craftCard.classList.remove("is-selected");
+    craftCard.classList.add("is-locked");
   }
-
-  if (regionElement) {
-    regionElement.classList.add("is-locked");
+  if (regionCard) {
+    regionCard.classList.add("is-locked");
   }
 
   updateGameScore();
   drawConnections();
 }
 
-function selectRegion(region) {
-  if (!state.selectedCraft || state.usedRegions.has(region)) {
-    return;
-  }
-  handleMatch(state.selectedCraft, region);
-}
+function renderGame() {
+  dom.craftList.innerHTML = "";
+  dom.regionList.innerHTML = "";
+  clearLines();
 
-function calculateScore(matches) {
-  let score = 0;
   CRAFTS.forEach((craft) => {
-    if (matches[craft] === CORRECT_MATCHES[craft]) {
-      score += 1;
-    }
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "match-card";
+    card.textContent = craft;
+    card.addEventListener("click", () => {
+      if (state.matches[craft]) {
+        return;
+      }
+      state.selectedCraft = state.selectedCraft === craft ? null : craft;
+      state.craftEls.forEach((el, name) => {
+        el.classList.toggle("is-selected", state.selectedCraft === name);
+      });
+    });
+    dom.craftList.appendChild(card);
+    state.craftEls.set(craft, card);
   });
-  return score;
+
+  state.shuffledRegions.forEach((region) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "match-card";
+    card.textContent = region;
+    card.addEventListener("click", () => {
+      if (!state.selectedCraft || state.usedRegions.has(region)) {
+        return;
+      }
+      handleMatch(state.selectedCraft, region);
+    });
+    dom.regionList.appendChild(card);
+    state.regionEls.set(region, card);
+  });
 }
 
 function updateGameScore() {
@@ -622,43 +653,48 @@ function updateGameScore() {
 }
 
 function clearLines() {
-  dom.lineLayer.innerHTML = "";
+  dom.lineSvg.innerHTML = "";
 }
 
 function drawConnections() {
   clearLines();
-  const boardRect = dom.gameBoard.getBoundingClientRect();
-  const stroke = getComputedStyle(document.documentElement).getPropertyValue("--text-soft").trim();
+  if (state.currentView !== "game" || isMobile()) {
+    return;
+  }
+
+  const spacerRect = dom.lineSpacer.getBoundingClientRect();
+  const width = spacerRect.width;
+  const height = spacerRect.height;
+  dom.lineSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
   Object.entries(state.matches).forEach(([craft, region]) => {
-    const craftElement = state.craftElements.get(craft);
-    const regionElement = state.regionElements.get(region);
-    if (!craftElement || !regionElement) {
+    const craftRect = state.craftEls.get(craft)?.getBoundingClientRect();
+    const regionRect = state.regionEls.get(region)?.getBoundingClientRect();
+    if (!craftRect || !regionRect) {
       return;
     }
 
-    const cRect = craftElement.getBoundingClientRect();
-    const rRect = regionElement.getBoundingClientRect();
-
-    const x1 = cRect.right - boardRect.left;
-    const y1 = cRect.top + (cRect.height / 2) - boardRect.top;
-    const x2 = rRect.left - boardRect.left;
-    const y2 = rRect.top + (rRect.height / 2) - boardRect.top;
-    const dx = Math.max(18, (x2 - x1) * 0.35);
+    const y1 = craftRect.top + (craftRect.height / 2) - spacerRect.top;
+    const y2 = regionRect.top + (regionRect.height / 2) - spacerRect.top;
+    const x1 = 8;
+    const x2 = Math.max(10, width - 8);
+    const cx1 = width * 0.33;
+    const cx2 = width * 0.67;
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", `M ${x1.toFixed(2)} ${y1.toFixed(2)} C ${(x1 + dx).toFixed(2)} ${y1.toFixed(2)}, ${(x2 - dx).toFixed(2)} ${y2.toFixed(2)}, ${x2.toFixed(2)} ${y2.toFixed(2)}`);
+    path.setAttribute("d", `M ${x1.toFixed(2)} ${y1.toFixed(2)} C ${cx1.toFixed(2)} ${y1.toFixed(2)}, ${cx2.toFixed(2)} ${y2.toFixed(2)}, ${x2.toFixed(2)} ${y2.toFixed(2)}`);
     path.setAttribute("fill", "none");
-    path.setAttribute("stroke", stroke);
+    path.setAttribute("stroke", "#6b858a");
     path.setAttribute("stroke-width", "1.5");
     path.setAttribute("stroke-linecap", "round");
-    path.setAttribute("opacity", "0.8");
-    dom.lineLayer.appendChild(path);
+    path.setAttribute("opacity", "0.9");
+    dom.lineSvg.appendChild(path);
   });
 }
 
-function saveScore(name, score, matches) {
+function saveScore(name, matches) {
   const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  const score = calculateScore(matches);
   leaderboard.push({
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     name,
@@ -666,25 +702,21 @@ function saveScore(name, score, matches) {
     matches,
     createdAt: Date.now()
   });
+
   leaderboard.sort((a, b) => {
     if (b.score !== a.score) {
       return b.score - a.score;
     }
     return a.createdAt - b.createdAt;
   });
+
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 }
 
 function submitGame() {
-  const score = calculateScore(state.matches);
-  saveScore(state.currentPlayer, score, { ...state.matches });
-  renderResults({
-    title: "Results",
-    name: state.currentPlayer,
-    matches: { ...state.matches },
-    showLeaderboardBack: false
-  });
-  showScreen("result");
+  saveScore(state.currentPlayer, { ...state.matches });
+  renderLeaderboard();
+  switchView("leaderboard");
 }
 
 function renderLeaderboard() {
@@ -693,7 +725,7 @@ function renderLeaderboard() {
 
   if (!leaderboard.length) {
     const empty = document.createElement("div");
-    empty.className = "leaderboard-item muted";
+    empty.className = "leader-row muted";
     empty.textContent = "No scores yet.";
     dom.leaderboardList.appendChild(empty);
     return;
@@ -701,114 +733,88 @@ function renderLeaderboard() {
 
   leaderboard.forEach((entry, index) => {
     const row = document.createElement("div");
-    row.className = "leaderboard-item";
+    row.className = "leader-row";
 
-    const nameEl = document.createElement("div");
-    nameEl.textContent = `${index + 1}. ${entry.name}`;
+    const name = document.createElement("div");
+    name.textContent = `${index + 1}. ${entry.name}`;
 
-    const scoreEl = document.createElement("strong");
-    scoreEl.textContent = `${entry.score}/${CRAFTS.length}`;
+    const score = document.createElement("strong");
+    score.textContent = `${entry.score}/${CRAFTS.length}`;
 
-    const viewBtn = document.createElement("button");
-    viewBtn.className = "btn btn-secondary";
-    viewBtn.type = "button";
-    viewBtn.textContent = "View Results";
-    viewBtn.addEventListener("click", () => {
-      renderResults({
-        title: `${entry.name}'s Results`,
-        name: entry.name,
-        matches: entry.matches || {},
-        showLeaderboardBack: true
-      });
-      showScreen("result");
-    });
+    const view = document.createElement("button");
+    view.type = "button";
+    view.className = "btn btn-secondary";
+    view.textContent = "View Results";
+    view.addEventListener("click", () => openResults(entry));
 
-    row.appendChild(nameEl);
-    row.appendChild(scoreEl);
-    row.appendChild(viewBtn);
+    row.appendChild(name);
+    row.appendChild(score);
+    row.appendChild(view);
     dom.leaderboardList.appendChild(row);
   });
 }
 
-function renderResults(options) {
-  const matches = options.matches || {};
+function openResults(entry) {
+  state.lastLeaderboardScrollY = window.scrollY;
+
+  const matches = entry.matches || {};
   const score = calculateScore(matches);
-  const regionStatus = {};
+  dom.resultsTitle.textContent = `${entry.name}'s Results`;
+  dom.resultsSummary.textContent = `You scored ${score} / ${CRAFTS.length}`;
 
+  dom.resultsCraftList.innerHTML = "";
+  dom.resultsRegionList.innerHTML = "";
+
+  const selectedRegions = {};
   CRAFTS.forEach((craft) => {
-    const selectedRegion = matches[craft];
-    if (!selectedRegion) {
-      return;
+    const selected = matches[craft];
+    const isCorrect = selected === CORRECT_MATCHES[craft];
+
+    const craftCard = document.createElement("div");
+    craftCard.className = `result-card ${selected ? (isCorrect ? "good" : "bad") : ""}`.trim();
+    craftCard.textContent = `${craft} - ${selected || "-"}`;
+    dom.resultsCraftList.appendChild(craftCard);
+
+    if (selected) {
+      selectedRegions[selected] = isCorrect ? "good" : "bad";
     }
-    regionStatus[selectedRegion] = selectedRegion === CORRECT_MATCHES[craft] ? "good" : "bad";
-  });
-
-  dom.resultTitle.textContent = options.title;
-  dom.resultSummary.textContent = `${options.name} scored ${score} / ${CRAFTS.length}`;
-  dom.backToLeaderboardBtn.classList.toggle("hidden", !options.showLeaderboardBack);
-
-  dom.resultBoard.innerHTML = `
-    <div class="pair-grid">
-      <div class="col">
-        <h3>Crafts</h3>
-        <div id="resultCraftList" class="list"></div>
-      </div>
-      <div class="col">
-        <h3>Regions</h3>
-        <div id="resultRegionList" class="list"></div>
-      </div>
-    </div>
-  `;
-
-  const resultCraftList = document.getElementById("resultCraftList");
-  const resultRegionList = document.getElementById("resultRegionList");
-
-  CRAFTS.forEach((craft) => {
-    const selectedRegion = matches[craft] || "-";
-    const good = selectedRegion === CORRECT_MATCHES[craft];
-    const card = document.createElement("div");
-    card.className = `card ${selectedRegion === "-" ? "" : (good ? "good" : "bad")}`.trim();
-    card.textContent = `${craft} - ${selectedRegion}`;
-    resultCraftList.appendChild(card);
   });
 
   REGIONS.forEach((region) => {
-    const card = document.createElement("div");
-    const statusClass = regionStatus[region] || "";
-    card.className = `card ${statusClass}`.trim();
-    card.textContent = region;
-    resultRegionList.appendChild(card);
+    const regionCard = document.createElement("div");
+    const status = selectedRegions[region] || "";
+    regionCard.className = `result-card ${status}`.trim();
+    regionCard.textContent = region;
+    dom.resultsRegionList.appendChild(regionCard);
   });
 
-  dom.resultMatchList.innerHTML = "";
-  CRAFTS.forEach((craft) => {
-    const selectedRegion = matches[craft] || "-";
-    const item = document.createElement("div");
-    item.className = "result-match-item";
-    item.textContent = `${craft} -> ${selectedRegion}`;
-    dom.resultMatchList.appendChild(item);
-  });
+  dom.resultsOverlay.classList.add("is-open");
+  dom.resultsOverlay.setAttribute("aria-hidden", "false");
 }
 
-function openLeaderboard() {
-  clearLines();
-  renderLeaderboard();
-  showScreen("leaderboard");
+function closeResults() {
+  dom.resultsOverlay.classList.remove("is-open");
+  dom.resultsOverlay.setAttribute("aria-hidden", "true");
+  switchView("leaderboard");
+  window.scrollTo({ top: state.lastLeaderboardScrollY, behavior: "auto" });
+}
+
+function goHome() {
+  switchView("home");
 }
 
 function bindEvents() {
-  document.getElementById("startBtn").addEventListener("click", startGame);
-  document.getElementById("openLeaderboardBtn").addEventListener("click", openLeaderboard);
-  document.getElementById("homeFromGameBtn").addEventListener("click", goHome);
-  document.getElementById("backHomeFromLeaderboardBtn").addEventListener("click", goHome);
-  document.getElementById("homeFromResultBtn").addEventListener("click", goHome);
-  document.getElementById("backToLeaderboardBtn").addEventListener("click", openLeaderboard);
+  document.getElementById("start-btn").addEventListener("click", startGame);
+  document.getElementById("leaderboard-btn").addEventListener("click", () => {
+    renderLeaderboard();
+    switchView("leaderboard");
+  });
+  document.getElementById("home-from-game-btn").addEventListener("click", goHome);
+  document.getElementById("home-from-leaderboard-btn").addEventListener("click", goHome);
   dom.submitBtn.addEventListener("click", submitGame);
+  document.getElementById("results-back-btn").addEventListener("click", closeResults);
 
   window.addEventListener("resize", () => {
-    if (SCREENS.game.classList.contains("hidden")) {
-      return;
-    }
     if (state.resizeRAF) {
       cancelAnimationFrame(state.resizeRAF);
     }
@@ -817,7 +823,6 @@ function bindEvents() {
 }
 
 bindEvents();
-showScreen("home");
 </script>
 </body>
 </html>
