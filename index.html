@@ -174,6 +174,19 @@ h3 {
   box-shadow: inset 0 0 0 2px rgba(20, 55, 63, 0.28);
 }
 
+.input-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-element);
+}
+
+.field-error {
+  margin-top: var(--space-small);
+  font-size: 12px;
+  color: #b54848;
+  text-align: left;
+}
+
 #home-screen {
   width: 100%;
   min-height: calc(100vh - 32px);
@@ -322,6 +335,21 @@ h3 {
   align-items: center;
 }
 
+.leader-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.leader-name {
+  font-weight: 600;
+}
+
+.leader-phone {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
 .results-panel {
   margin-top: var(--space-section);
   padding-top: var(--space-section);
@@ -442,9 +470,21 @@ h3 {
     <section id="home-screen" class="screen hero-card active">
       <img class="logo" src="./logo.png" alt="Casa Carigar logo" loading="eager" decoding="sync" />
       <h1 class="title hero-title">Match the Craft to Its Region</h1>
-      <input id="player-name" class="input" type="text" maxlength="40" placeholder="Your Name" />
+      <div class="input-stack">
+        <input id="player-name" class="input" type="text" maxlength="40" placeholder="Your Name" />
+        <input
+          type="tel"
+          id="playerPhone"
+          class="input"
+          placeholder="Phone Number"
+          inputmode="numeric"
+          pattern="[0-9]{10}"
+          maxlength="10"
+        />
+      </div>
+      <p id="phone-error" class="field-error hidden">Enter a valid 10-digit phone number.</p>
       <div class="btn-row">
-        <button id="start-btn" class="btn btn-primary" type="button">Start Game</button>
+        <button id="start-btn" class="btn btn-primary" type="button" disabled>Start Game</button>
         <button id="leaderboard-btn" class="btn btn-secondary" type="button">Leaderboard</button>
       </div>
     </section>
@@ -542,6 +582,9 @@ const dom = {
     leaderboard: document.getElementById("leaderboard-screen")
   },
   playerName: document.getElementById("player-name"),
+  playerPhone: document.getElementById("playerPhone"),
+  phoneError: document.getElementById("phone-error"),
+  startBtn: document.getElementById("start-btn"),
   scoreText: document.getElementById("score-text"),
   craftList: document.getElementById("craft-list"),
   regionList: document.getElementById("region-list"),
@@ -562,6 +605,8 @@ const dom = {
 const state = {
   currentView: "home",
   currentPlayer: "",
+  currentPhone: "",
+  phoneTouched: false,
   selectedCraft: null,
   matches: {},
   usedRegions: new Set(),
@@ -608,12 +653,19 @@ function shuffle(input) {
 
 function startGame() {
   const name = dom.playerName.value.trim();
+  const phone = sanitizePhone(dom.playerPhone.value);
   if (!name) {
     alert("Enter your name to start.");
     return;
   }
+  if (!isPhoneValid(phone)) {
+    state.phoneTouched = true;
+    renderPhoneError();
+    return;
+  }
 
   state.currentPlayer = name;
+  state.currentPhone = phone;
   state.selectedCraft = null;
   state.matches = {};
   state.usedRegions = new Set();
@@ -777,11 +829,23 @@ function calculateResults(matches) {
 
 function submitGame() {
   const result = calculateResults(state.matches);
+  const matchResultsArray = CRAFTS.map((craft) => {
+    const region = state.matches[craft];
+    return {
+      craft,
+      region: region || null,
+      isCorrect: Boolean(region && region === CORRECT_MATCHES[craft])
+    };
+  }).filter((item) => item.region);
+
   saveLeaderboardEntry({
     name: state.currentPlayer,
+    phone: state.currentPhone,
     score: result.score,
     correctPairs: result.correctPairs,
-    incorrectPairs: result.incorrectPairs
+    incorrectPairs: result.incorrectPairs,
+    results: matchResultsArray,
+    date: new Date().toISOString()
   });
   renderLeaderboard();
   switchView("leaderboard");
@@ -821,11 +885,22 @@ function renderLeaderboard() {
     const row = document.createElement("div");
     row.className = "leaderboard-item";
 
+    const meta = document.createElement("div");
+    meta.className = "leader-meta";
+
     const name = document.createElement("div");
+    name.className = "leader-name";
     name.textContent = `${index + 1}. ${entry.name}`;
 
+    const phone = document.createElement("div");
+    phone.className = "leader-phone";
+    phone.textContent = entry.phone || "-";
+
+    meta.appendChild(name);
+    meta.appendChild(phone);
+
     const score = document.createElement("strong");
-    score.textContent = `${entry.score}/${CRAFTS.length}`;
+    score.textContent = `Score: ${entry.score}/${CRAFTS.length}`;
 
     const viewBtn = document.createElement("button");
     viewBtn.className = "btn btn-secondary";
@@ -833,7 +908,7 @@ function renderLeaderboard() {
     viewBtn.textContent = "View Results";
     viewBtn.addEventListener("click", () => showResults(entry));
 
-    row.appendChild(name);
+    row.appendChild(meta);
     row.appendChild(score);
     row.appendChild(viewBtn);
     dom.leaderboardList.appendChild(row);
@@ -852,17 +927,24 @@ function showResults(entry) {
   dom.resultsCraftList.innerHTML = "";
   dom.resultsRegionList.innerHTML = "";
 
+  const correctPairs = entry.correctPairs || (entry.results || [])
+    .filter((pair) => pair.isCorrect)
+    .map((pair) => ({ craft: pair.craft, region: pair.region }));
+  const incorrectPairs = entry.incorrectPairs || (entry.results || [])
+    .filter((pair) => !pair.isCorrect)
+    .map((pair) => ({ craft: pair.craft, region: pair.region }));
+
   const regionStatus = {};
-  entry.correctPairs.forEach((pair) => {
+  correctPairs.forEach((pair) => {
     regionStatus[pair.region] = "good";
   });
-  entry.incorrectPairs.forEach((pair) => {
+  incorrectPairs.forEach((pair) => {
     regionStatus[pair.region] = "bad";
   });
 
   CRAFTS.forEach((craft) => {
-    const foundCorrect = entry.correctPairs.find((pair) => pair.craft === craft);
-    const foundIncorrect = entry.incorrectPairs.find((pair) => pair.craft === craft);
+    const foundCorrect = correctPairs.find((pair) => pair.craft === craft);
+    const foundIncorrect = incorrectPairs.find((pair) => pair.craft === craft);
     const status = foundCorrect ? "good" : (foundIncorrect ? "bad" : "");
     const region = foundCorrect?.region || foundIncorrect?.region || "-";
 
@@ -887,6 +969,27 @@ function goHome() {
   switchView("home");
 }
 
+function sanitizePhone(value) {
+  return value.replace(/\D/g, "").slice(0, 10);
+}
+
+function isPhoneValid(phone) {
+  return /^\d{10}$/.test(phone);
+}
+
+function renderPhoneError() {
+  const phone = sanitizePhone(dom.playerPhone.value);
+  const showError = state.phoneTouched && !isPhoneValid(phone);
+  dom.phoneError.classList.toggle("hidden", !showError);
+}
+
+function updateStartButtonState() {
+  const hasName = dom.playerName.value.trim().length > 0;
+  const validPhone = isPhoneValid(sanitizePhone(dom.playerPhone.value));
+  dom.startBtn.disabled = !(hasName && validPhone);
+  renderPhoneError();
+}
+
 function bindEvents() {
   document.getElementById("start-btn").addEventListener("click", startGame);
   document.getElementById("leaderboard-btn").addEventListener("click", () => {
@@ -898,6 +1001,16 @@ function bindEvents() {
   document.getElementById("submit-btn").addEventListener("click", submitGame);
   document.getElementById("back-to-leaderboard-btn").addEventListener("click", hideResultsPanel);
 
+  dom.playerName.addEventListener("input", updateStartButtonState);
+  dom.playerPhone.addEventListener("input", () => {
+    dom.playerPhone.value = sanitizePhone(dom.playerPhone.value);
+    updateStartButtonState();
+  });
+  dom.playerPhone.addEventListener("blur", () => {
+    state.phoneTouched = true;
+    renderPhoneError();
+  });
+
   window.addEventListener("resize", () => {
     updateMobileStep();
     if (state.resizeRAF) {
@@ -908,6 +1021,7 @@ function bindEvents() {
 }
 
 bindEvents();
+updateStartButtonState();
 </script>
 </body>
 </html>
